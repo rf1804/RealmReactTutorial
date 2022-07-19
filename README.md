@@ -18,18 +18,6 @@
 ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=flat&logo=visual-studio-code&logoColor=white)
 
 
-[![Build status](https://build.appcenter.ms/v0.1/apps/f925f79a-a920-49a6-b808-fcc130893cbf/branches/main/badge)](https://appcenter.ms)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=easyeat-ai_EasyEat-Partner-RN&metric=security_rating&token=7c6f810b5c5b473e875ae82b27e55d04dbc8f247)](https://sonarcloud.io/summary/new_code?id=easyeat-ai_EasyEat-Partner-RN)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=easyeat-ai_EasyEat-Partner-RN&metric=bugs&token=7c6f810b5c5b473e875ae82b27e55d04dbc8f247)](https://sonarcloud.io/summary/new_code?id=easyeat-ai_EasyEat-Partner-RN)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=easyeat-ai_EasyEat-Partner-RN&metric=vulnerabilities&token=7c6f810b5c5b473e875ae82b27e55d04dbc8f247)](https://sonarcloud.io/summary/new_code?id=easyeat-ai_EasyEat-Partner-RN)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=easyeat-ai_EasyEat-Partner-RN&metric=duplicated_lines_density&token=7c6f810b5c5b473e875ae82b27e55d04dbc8f247)](https://sonarcloud.io/summary/new_code?id=easyeat-ai_EasyEat-Partner-RN)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=easyeat-ai_EasyEat-Partner-RN&metric=reliability_rating&token=7c6f810b5c5b473e875ae82b27e55d04dbc8f247)](https://sonarcloud.io/summary/new_code?id=easyeat-ai_EasyEat-Partner-RN)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=easyeat-ai_EasyEat-Partner-RN&metric=alert_status&token=7c6f810b5c5b473e875ae82b27e55d04dbc8f247)](https://sonarcloud.io/summary/new_code?id=easyeat-ai_EasyEat-Partner-RN)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=easyeat-ai_EasyEat-Partner-RN&metric=sqale_index&token=7c6f810b5c5b473e875ae82b27e55d04dbc8f247)](https://sonarcloud.io/summary/new_code?id=easyeat-ai_EasyEat-Partner-RN)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=easyeat-ai_EasyEat-Partner-RN&metric=ncloc&token=7c6f810b5c5b473e875ae82b27e55d04dbc8f247)](https://sonarcloud.io/summary/new_code?id=easyeat-ai_EasyEat-Partner-RN)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=easyeat-ai_EasyEat-Partner-RN&metric=code_smells&token=7c6f810b5c5b473e875ae82b27e55d04dbc8f247)](https://sonarcloud.io/summary/new_code?id=easyeat-ai_EasyEat-Partner-RN)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=easyeat-ai_EasyEat-Partner-RN&metric=sqale_rating&token=7c6f810b5c5b473e875ae82b27e55d04dbc8f247)](https://sonarcloud.io/summary/new_code?id=easyeat-ai_EasyEat-Partner-RN)
-
 
 # Realm_React_tutorial
 

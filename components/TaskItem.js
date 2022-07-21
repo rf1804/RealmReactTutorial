@@ -1,18 +1,24 @@
-import React, { useState } from "react";
-import { ListItem, Text } from "react-native-elements";
-import { useTasks } from "../providers/TasksProvider";
-import { ActionSheet } from "./ActionSheet";
-import { Task } from "../schemas";
+import React, {useState} from 'react';
+import {ListItem, Text} from 'react-native-elements';
+import {useTasks} from '../providers/TasksProvider';
+import {ActionSheet} from './ActionSheet';
+import {Task} from '../schemas';
 
-import styles from "../stylesheet";
+import styles from '../stylesheet';
 
-export function TaskItem({ task }) {
+export function TaskItem({task}) {
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
 
-  const { deleteTask, setTaskStatus } = useTasks();
+  const {deleteTask, editTaskView, setTaskStatus} = useTasks();
   const actions = [
     {
-      title: "Delete",
+      title: 'Edit',
+      action: () => {
+        editTaskView(task);
+      },
+    },
+    {
+      title: 'Delete',
       action: () => {
         deleteTask(task);
       },
@@ -36,24 +42,20 @@ export function TaskItem({ task }) {
         }}
         actions={actions}
       />
-      <ListItem 
-        key={task.id} 
+      <ListItem
+        key={task.id}
         onPress={() => {
           setActionSheetVisible(true);
         }}
         bottomDivider>
         <ListItem.Content>
-          <ListItem.Title>
-            {task.name}
-            </ListItem.Title>
+          <ListItem.Title>{task.name}</ListItem.Title>
         </ListItem.Content>
-        {
-          task.status === Task.STATUS_COMPLETE ? (
-            <Text>&#10004; {/* checkmark */}</Text>
-          ) : task.status === Task.STATUS_IN_PROGRESS ? (
-            <Text>In Progress</Text>
-          ) : null
-        }
+        {task.status === Task.STATUS_COMPLETE ? (
+          <Text>&#10004; {/* checkmark */}</Text>
+        ) : task.status === Task.STATUS_IN_PROGRESS ? (
+          <Text>In Progress</Text>
+        ) : null}
       </ListItem>
     </>
   );

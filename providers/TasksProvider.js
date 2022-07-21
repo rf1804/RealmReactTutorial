@@ -2,11 +2,16 @@ import React, {useContext, useState, useEffect, useRef} from 'react';
 import Realm from 'realm';
 import {Task} from '../schemas';
 import {useAuth} from './AuthProvider';
+import {ObjectId} from 'bson';
+import {EditTask} from '../components/EditTask';
+import {Overlay} from 'react-native-elements';
 
 const TasksContext = React.createContext(null);
 
 const TasksProvider = ({children, projectPartition}) => {
   const [tasks, setTasks] = useState([]);
+  const [updatedTask, setUpdatedTask] = useState();
+  const [overlayVisible, setOverlayVisible] = useState(false);
   const {user} = useAuth();
 
   // Use a Ref to store the realm rather than the state because it is not
@@ -38,19 +43,27 @@ const TasksProvider = ({children, projectPartition}) => {
       const syncTasks = projectRealm.objects('Task');
       let sortedTasks = syncTasks.sorted('name');
       setTasks([...sortedTasks]);
+      sortedTasks.forEach(task => {
+        console.log('id : ', task._id);
+        console.log('name :', task.name);
+        console.log('status :', task.status);
+        console.log('title :', task.title);
+        console.log('*****************');
+      });
+
       sortedTasks.addListener(() => {
         setTasks([...sortedTasks]);
       });
       // sortedTasks.addListener((tasks, changes) => {
-      //   console.log('inside listener tasks', tasks);
-      //   console.log('inside listener changes', changes);
+      //   // console.log('inside listener tasks', tasks);
+      //   // console.log('inside listener changes', changes);
       //   setTasks([...sortedTasks]);
       // });
 
-      //correct code
-      // sortedTasks.addListener(() => {
-      //   setTasks([...sortedTasks]);
-      // });
+      // //correct code
+      sortedTasks.addListener(() => {
+        setTasks([...sortedTasks]);
+      });
     });
 
     // TODO: Open the project realm with the given configuration and store
@@ -81,6 +94,17 @@ const TasksProvider = ({children, projectPartition}) => {
         new Task({
           name: newTaskName || 'New Task',
           partition: projectPartition,
+          // title: 'New task',
+          // subTask: [
+          //   {
+          //     namee: 'subTask1',
+          //     statuss: Task.STATUS_OPEN,
+          //   },
+          //   {
+          //     name: 'subTask2',
+          //     statuss: Task.STATUS_OPEN,
+          //   },
+          // ],
         }),
       );
     });
@@ -114,19 +138,49 @@ const TasksProvider = ({children, projectPartition}) => {
     // TODO: In a write block, delete the Task.
   };
 
+  // Define the function for Edit a task.
+  //TODO:
+
+  const editTask = (task, updatedName) => {
+    const projectRealm = realmRef.current;
+    projectRealm.write(() => {
+      task.name = updatedName;
+    });
+    setOverlayVisible(false);
+  };
+
+  const editTaskView = task => {
+    setOverlayVisible(true);
+    setUpdatedTask(task);
+
+    // const projectRealm = realmRef.current;
+    // projectRealm.write(() => {
+    //   task.name = task.name + ' updated';
+    // });
+  };
+
   // Render the children within the TaskContext's provider. The value contains
   // everything that should be made available to descendants that use the
   // useTasks hook.
   return (
-    <TasksContext.Provider
-      value={{
-        createTask,
-        deleteTask,
-        setTaskStatus,
-        tasks,
-      }}>
-      {children}
-    </TasksContext.Provider>
+    <>
+      <TasksContext.Provider
+        value={{
+          createTask,
+          deleteTask,
+          setTaskStatus,
+          editTaskView,
+          editTask,
+          tasks,
+        }}>
+        {children}
+        <Overlay
+          isVisible={overlayVisible}
+          onBackdropPress={() => setOverlayVisible(false)}>
+          <EditTask taskObj={updatedTask} />
+        </Overlay>
+      </TasksContext.Provider>
+    </>
   );
 };
 

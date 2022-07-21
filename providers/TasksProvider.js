@@ -1,13 +1,13 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
-import Realm from "realm";
-import { Task } from "../schemas";
-import { useAuth } from "./AuthProvider";
+import React, {useContext, useState, useEffect, useRef} from 'react';
+import Realm from 'realm';
+import {Task} from '../schemas';
+import {useAuth} from './AuthProvider';
 
 const TasksContext = React.createContext(null);
 
-const TasksProvider = ({ children, projectPartition }) => {
+const TasksProvider = ({children, projectPartition}) => {
   const [tasks, setTasks] = useState([]);
-  const { user } = useAuth();
+  const {user} = useAuth();
 
   // Use a Ref to store the realm rather than the state because it is not
   // directly rendered, so updating it should not trigger a re-render as using
@@ -19,47 +19,33 @@ const TasksProvider = ({ children, projectPartition }) => {
     // Enables offline-first: opens a local realm immediately without waiting
     // for the download of a synchronized realm to be completed.
     const OpenRealmBehaviorConfiguration = {
-      type: "openImmediately",
+      type: 'openImmediately',
     };
 
     const config = {
+      schema: [Task.schema],
       sync: {
         user: user,
         partitionValue: projectPartition,
+        newRealmFileBehavior: OpenRealmBehaviorConfiguration,
+        existingRealmFileBehavior: OpenRealmBehaviorConfiguration,
       },
     };
 
-    // function listener(tasks, changes) {
-    //   console.log("inside listener tasks", tasks);
-    //   console.log("inside listener changes", changes);
-    //   // changes.deletions.forEach(index => {
-    //   //   console.log(`A task was deleted at the ${index} index`);
-    //   //   getTaskList();
-    //   // });
-
-    //   // // Update UI in response to inserted objects
-    //   // changes.insertions.forEach(index => {
-    //   //   let insertedTasks = tasks[index];
-    //   //   console.log(`insertedTasks: ${JSON.stringify(insertedTasks, null, 2)}`);
-    //   // });
-
-    //   // changes.newModifications.forEach(index => {
-    //   //   let modifiedTask = tasks[index];
-    //   //   console.log(`modifiedTask: ${JSON.stringify(modifiedTask, null, 2)}`);
-    //   // });
-    // }
-
     // open a realm for this particular project
-    Realm.open(config).then((projectRealm) => {
+    Realm.open(config).then(projectRealm => {
       realmRef.current = projectRealm;
-      const syncTasks = projectRealm.objects("Task");
-      let sortedTasks = syncTasks.sorted("name");
+      const syncTasks = projectRealm.objects('Task');
+      let sortedTasks = syncTasks.sorted('name');
       setTasks([...sortedTasks]);
-      sortedTasks.addListener((tasks, changes) => {
-        console.log("inside listener tasks", tasks);
-        console.log("inside listener changes", changes);
+      sortedTasks.addListener(() => {
         setTasks([...sortedTasks]);
       });
+      // sortedTasks.addListener((tasks, changes) => {
+      //   console.log('inside listener tasks', tasks);
+      //   console.log('inside listener changes', changes);
+      //   setTasks([...sortedTasks]);
+      // });
 
       //correct code
       // sortedTasks.addListener(() => {
@@ -86,16 +72,16 @@ const TasksProvider = ({ children, projectPartition }) => {
     };
   }, [user, projectPartition]);
 
-  const createTask = (newTaskName) => {
+  const createTask = newTaskName => {
     const projectRealm = realmRef.current;
     projectRealm.write(() => {
       // Create a new task in the same partition -- that is, in the same project.
       projectRealm.create(
-        "Task",
+        'Task',
         new Task({
-          name: newTaskName || "New Task",
+          name: newTaskName || 'New Task',
           partition: projectPartition,
-        })
+        }),
       );
     });
   };
@@ -119,11 +105,11 @@ const TasksProvider = ({ children, projectPartition }) => {
   };
 
   // Define the function for deleting a task.
-  const deleteTask = (task) => {
+  const deleteTask = task => {
     const projectRealm = realmRef.current;
     projectRealm.write(() => {
       projectRealm.delete(task);
-      setTasks([...projectRealm.objects("Task").sorted("name")]);
+      setTasks([...projectRealm.objects('Task').sorted('name')]);
     });
     // TODO: In a write block, delete the Task.
   };
@@ -138,8 +124,7 @@ const TasksProvider = ({ children, projectPartition }) => {
         deleteTask,
         setTaskStatus,
         tasks,
-      }}
-    >
+      }}>
       {children}
     </TasksContext.Provider>
   );
@@ -151,9 +136,9 @@ const TasksProvider = ({ children, projectPartition }) => {
 const useTasks = () => {
   const task = useContext(TasksContext);
   if (task == null) {
-    throw new Error("useTasks() called outside of a TasksProvider?"); // an alert is not placed because this is an error for the developer not the user
+    throw new Error('useTasks() called outside of a TasksProvider?'); // an alert is not placed because this is an error for the developer not the user
   }
   return task;
 };
 
-export { TasksProvider, useTasks };
+export {TasksProvider, useTasks};

@@ -1,6 +1,6 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
-import Realm from "realm";
-import app from "../realmApp";
+import React, {useContext, useState, useEffect, useRef} from 'react';
+import Realm from 'realm';
+import app from '../realmApp';
 
 // Create a new Context object that will be provided to descendants of
 // the AuthProvider.
@@ -9,7 +9,7 @@ const AuthContext = React.createContext(null);
 // The AuthProvider is responsible for user management and provides the
 // AuthContext value to its descendants. Components under an AuthProvider can
 // use the useAuth() hook to access the auth value.
-const AuthProvider = ({ children }) => {
+const AuthProvider = ({children}) => {
   const [user, setUser] = useState(app.currentUser);
   const realmRef = useRef(null);
   const [projectData, setProjectData] = useState([]);
@@ -19,7 +19,7 @@ const AuthProvider = ({ children }) => {
       return;
     }
 
-    const myProject = { name: "My Project", partition: `project=${user.id}` };
+    const myProject = {name: 'My Project', partition: `project=${user.id}`};
     setProjectData([myProject]);
 
     // TODO: Open the user realm, which contains at most one user custom data object
@@ -41,7 +41,7 @@ const AuthProvider = ({ children }) => {
   // The signUp function takes an email and password and uses the
   // emailPassword authentication provider to register the user.
   const signUp = async (email, password) => {
-    await app.emailPasswordAuth.registerUser({ email, password });
+    await app.emailPasswordAuth.registerUser({email, password});
 
     // TODO: Pass the email and password to Realm's email password provider to register the user.
     // Registering only registers and does not log in.
@@ -67,8 +67,7 @@ const AuthProvider = ({ children }) => {
         signOut,
         user,
         projectData, // list of projects the user is a memberOf
-      }}
-    >
+      }}>
       {children}
     </AuthContext.Provider>
   );
@@ -79,9 +78,9 @@ const AuthProvider = ({ children }) => {
 const useAuth = () => {
   const auth = useContext(AuthContext);
   if (auth == null) {
-    throw new Error("useAuth() called outside of a AuthProvider?");
+    throw new Error('useAuth() called outside of a AuthProvider?');
   }
   return auth;
 };
 
-export { AuthProvider, useAuth };
+export {AuthProvider, useAuth};

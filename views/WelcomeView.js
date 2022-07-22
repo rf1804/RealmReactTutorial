@@ -10,8 +10,8 @@ export function WelcomeView({navigation}) {
 
   useEffect(() => {
     // If there is a user logged in, go to the Projects page.
-    // setEmail('shubham@gmail.com');
-    // setPassword('Qwerty@1234');
+    setEmail('shubham@gmail.com');
+    setPassword('Qwerty@1234');
     if (user != null) {
       navigation.navigate('Projects');
     }

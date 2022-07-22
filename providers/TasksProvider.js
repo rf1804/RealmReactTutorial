@@ -47,7 +47,7 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
     // open a realm for this particular project
     Realm.open(config).then(projectRealm => {
       realmRef.current = projectRealm;
-      const syncTasks = projectRealm.objects('Task');
+      const syncTasks = projectRealm.objects('Task1');
       // let sortedTasks = syncTasks.sorted('name');
       setTasks([...syncTasks]);
       sortedTasks.forEach(task => {
@@ -98,11 +98,12 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
     projectRealm.write(() => {
       // Create a new task in the same partition -- that is, in the same project.
       projectRealm.create(
-        'Task',
+        'Task1',
         new Task({
           name: newTaskName || 'New Task',
           partition: projectPartition,
-          subTask: [`   ${newTaskName} subTask1`, `   ${newTaskName} subTask2`],
+          subTask: ['A', 'B'],
+          // subTask: [`   ${newTaskName} subTask1`, `   ${newTaskName} subTask2`],
           // subTask: [
           //   {
           //     // _id: new ObjectId(),
@@ -143,7 +144,7 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
     const projectRealm = realmRef.current;
     projectRealm.write(() => {
       projectRealm.delete(task);
-      setTasks([...projectRealm.objects('Task').sorted('name')]);
+      setTasks([...projectRealm.objects('Task1').sorted('name')]);
     });
     // TODO: In a write block, delete the Task.
   };
@@ -160,17 +161,10 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
   };
 
   const editSubTask = (task, index, updatedSubTask) => {
-    // console.log(updatedSubTask);
     console.log('updation perform at index', index);
     const projectRealm = realmRef.current;
-    const updatedSubTaskValues = JSON.parse(JSON.stringify(task.subTask));
-    updatedSubTaskValues[index] = updatedSubTask;
-    console.log('updation subTask array before write', updatedSubTaskValues);
-
     projectRealm.write(() => {
-      updatedSubTaskValues.forEach(value => {
-        task.subTask.push(value);
-      });
+      task.subTask[index] = updatedSubTask;
     });
     setOverlayVisibleForSubTask(false);
   };

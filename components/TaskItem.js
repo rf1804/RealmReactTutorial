@@ -92,7 +92,8 @@ export function TaskItem({task}) {
         </ListItem.Content>
       </ListItem>
       {showSubTask
-        ? JSON.parse(JSON.stringify(subTaskVal)).map((subTask, index) => {
+        ? //JSON.parse(JSON.stringify(subTaskVal)).map((subTask, index) => {
+          subTaskVal.map((subTask, index) => {
             console.log('rrrr', subTask);
             return (
               <ListItem

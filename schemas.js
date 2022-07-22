@@ -36,12 +36,12 @@ class Task {
   // };
 
   static schema = {
-    name: 'Task',
+    name: 'Task1',
     properties: {
       _id: 'objectId',
       name: 'string',
       status: 'string',
-      subTask: 'string<>',
+      subTask: 'string[]',
     },
     primaryKey: '_id',
   };

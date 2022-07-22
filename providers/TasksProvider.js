@@ -6,13 +6,19 @@ import {ObjectId} from 'bson';
 import {EditTask} from '../components/EditTask';
 import {Overlay} from 'react-native-elements';
 import {SubTaskView} from '../views/SubTaskView';
+import {EditSubTask} from '../components/EditSubTask';
 
 const TasksContext = React.createContext(null);
 
 const TasksProvider = ({navigation, route, children, projectPartition}) => {
   const [tasks, setTasks] = useState([]);
   const [updatedTask, setUpdatedTask] = useState();
+  const [subTaskIndexToUpdate, setSubTaskIndexToUpdate] = useState();
+  const [subTaskInitalVal, setsubTaskInitalVal] = useState('');
+
   const [overlayVisible, setOverlayVisible] = useState(false);
+  const [overlayVisibleForSubTask, setOverlayVisibleForSubTask] =
+    useState(false);
   const {user} = useAuth();
 
   // Use a Ref to store the realm rather than the state because it is not
@@ -42,8 +48,8 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
     Realm.open(config).then(projectRealm => {
       realmRef.current = projectRealm;
       const syncTasks = projectRealm.objects('Task');
-      let sortedTasks = syncTasks.sorted('name');
-      setTasks([...sortedTasks]);
+      // let sortedTasks = syncTasks.sorted('name');
+      setTasks([...syncTasks]);
       sortedTasks.forEach(task => {
         console.log('id : ', task._id);
         console.log('name :', task.name);
@@ -52,8 +58,8 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
         console.log('*****************');
       });
 
-      sortedTasks.addListener(() => {
-        setTasks([...sortedTasks]);
+      syncTasks.addListener(() => {
+        setTasks([...syncTasks]);
       });
 
       // sortedTasks.addListener((tasks, changes) => {
@@ -63,9 +69,9 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
       // });
 
       // //correct code
-      sortedTasks.addListener(() => {
-        setTasks([...sortedTasks]);
-      });
+      // sortedTasks.addListener(() => {
+      //   setTasks([...sortedTasks]);
+      // });
     });
 
     // TODO: Open the project realm with the given configuration and store
@@ -96,7 +102,7 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
         new Task({
           name: newTaskName || 'New Task',
           partition: projectPartition,
-          subTask: ['subTask1', 'subTask2'],
+          subTask: [`   ${newTaskName} subTask1`, `   ${newTaskName} subTask2`],
           // subTask: [
           //   {
           //     // _id: new ObjectId(),
@@ -153,9 +159,25 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
     setOverlayVisible(false);
   };
 
+  const editSubTask = (task, index, updatedSubTask) => {
+    // console.log(updatedSubTask);
+    console.log('updation perform at index', index);
+    const projectRealm = realmRef.current;
+    const updatedSubTaskValues = JSON.parse(JSON.stringify(task.subTask));
+    updatedSubTaskValues[index] = updatedSubTask;
+    console.log('updation subTask array before write', updatedSubTaskValues);
+
+    projectRealm.write(() => {
+      updatedSubTaskValues.forEach(value => {
+        task.subTask.push(value);
+      });
+    });
+    setOverlayVisibleForSubTask(false);
+  };
+
   const viewSubTask = task => {
     navigation.navigate('SubTask List', {
-      taskObj: JSON.parse(JSON.stringify(task)),
+      taskObj: task,
       projectPartition: projectPartition,
     });
 
@@ -171,6 +193,13 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
     setOverlayVisible(true);
   };
 
+  const editSubTaskView = (task, index, subTask) => {
+    setSubTaskIndexToUpdate(index);
+    setsubTaskInitalVal(subTask);
+    setUpdatedTask(task);
+    setOverlayVisibleForSubTask(true);
+  };
+
   // Render the children within the TaskContext's provider. The value contains
   // everything that should be made available to descendants that use the
   // useTasks hook.
@@ -184,6 +213,8 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
           editTaskView,
           editTask,
           viewSubTask,
+          editSubTaskView,
+          editSubTask,
           tasks,
         }}>
         {children}
@@ -191,6 +222,15 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
           isVisible={overlayVisible}
           onBackdropPress={() => setOverlayVisible(false)}>
           <EditTask taskObj={updatedTask} />
+        </Overlay>
+        <Overlay
+          isVisible={overlayVisibleForSubTask}
+          onBackdropPress={() => setOverlayVisibleForSubTask(false)}>
+          <EditSubTask
+            taskObj={updatedTask}
+            index={subTaskIndexToUpdate}
+            subTaskVal={subTaskInitalVal}
+          />
         </Overlay>
       </TasksContext.Provider>
     </>

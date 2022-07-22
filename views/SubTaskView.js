@@ -9,12 +9,7 @@ import {useTasks} from '../providers/TasksProvider';
 import {SubTaskItem} from '../components/SubTaskItem';
 
 export function SubTaskView(props) {
-  const subTaskVal = props.route.params.taskObj.subTask;
-  //   const {name} = route.params;
-
-  //   const [overlayVisible, setOverlayVisible] = useState(false);
-
-  //   const {tasks, createTask} = useTasks();
+  // const subTaskVal = props.route.params.taskObj.subTask;
   useEffect(() => {
     props.navigation.setOptions({
       //   headerRight: function Header() {

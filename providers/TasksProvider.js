@@ -5,13 +5,15 @@ import {useAuth} from './AuthProvider';
 import {ObjectId} from 'bson';
 import {EditTask} from '../components/EditTask';
 import {Overlay} from 'react-native-elements';
+import {SubTaskView} from '../views/SubTaskView';
 
 const TasksContext = React.createContext(null);
 
-const TasksProvider = ({children, projectPartition}) => {
+const TasksProvider = ({navigation, route, children, projectPartition}) => {
   const [tasks, setTasks] = useState([]);
   const [updatedTask, setUpdatedTask] = useState();
   const [overlayVisible, setOverlayVisible] = useState(false);
+  const [isOpenSubTask, setIsOpenSubTask] = useState(false);
   const {user} = useAuth();
 
   // Use a Ref to store the realm rather than the state because it is not
@@ -54,6 +56,7 @@ const TasksProvider = ({children, projectPartition}) => {
       sortedTasks.addListener(() => {
         setTasks([...sortedTasks]);
       });
+
       // sortedTasks.addListener((tasks, changes) => {
       //   // console.log('inside listener tasks', tasks);
       //   // console.log('inside listener changes', changes);
@@ -94,15 +97,17 @@ const TasksProvider = ({children, projectPartition}) => {
         new Task({
           name: newTaskName || 'New Task',
           partition: projectPartition,
-          // title: 'New task',
+          subTask: ['subTask1', 'subTask2'],
           // subTask: [
           //   {
-          //     namee: 'subTask1',
-          //     statuss: Task.STATUS_OPEN,
+          //     // _id: new ObjectId(),
+          //     name: 'subTask1',
+          //     status: Task.STATUS_OPEN,
           //   },
           //   {
+          //     // _id: new ObjectId(),
           //     name: 'subTask2',
-          //     statuss: Task.STATUS_OPEN,
+          //     status: Task.STATUS_OPEN,
           //   },
           // ],
         }),
@@ -149,14 +154,22 @@ const TasksProvider = ({children, projectPartition}) => {
     setOverlayVisible(false);
   };
 
-  const editTaskView = task => {
-    setOverlayVisible(true);
-    setUpdatedTask(task);
+  const viewSubTask = task => {
+    navigation.navigate('SubTask List', {
+      taskObj: task,
+      partition: projectPartition,
+    });
 
     // const projectRealm = realmRef.current;
-    // projectRealm.write(() => {
-    //   task.name = task.name + ' updated';
-    // });
+    // // projectRealm.write(() => {
+    // //   task.name = updatedName;
+    // // });
+    // // setOverlayVisible(false);
+  };
+
+  const editTaskView = task => {
+    setUpdatedTask(task);
+    setOverlayVisible(true);
   };
 
   // Render the children within the TaskContext's provider. The value contains
@@ -171,6 +184,7 @@ const TasksProvider = ({children, projectPartition}) => {
           setTaskStatus,
           editTaskView,
           editTask,
+          viewSubTask,
           tasks,
         }}>
         {children}

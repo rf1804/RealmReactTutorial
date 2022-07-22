@@ -6,7 +6,7 @@ import {Task} from '../schemas';
 
 import styles from '../stylesheet';
 
-export function TaskItem({task}) {
+export function SubTaskItem({taskObj, key, title}) {
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
 
   const {deleteTask, editTaskView, viewSubTask, setTaskStatus} = useTasks();
@@ -14,19 +14,19 @@ export function TaskItem({task}) {
     {
       title: 'View Subtask',
       action: () => {
-        viewSubTask(task);
+        viewSubTask(taskObj);
       },
     },
     {
       title: 'Edit Title',
       action: () => {
-        editTaskView(task);
+        editTaskView(taskObj);
       },
     },
     {
       title: 'Delete',
       action: () => {
-        deleteTask(task);
+        deleteTask(taskObj);
       },
     },
   ];
@@ -42,26 +42,21 @@ export function TaskItem({task}) {
       <ActionSheet
         visible={actionSheetVisible}
         closeOverlay={() => {
-          if (task.status) {
+          if (taskObj.status) {
             setActionSheetVisible(false);
           }
         }}
         actions={actions}
       />
       <ListItem
-        key={task.id}
+        key={key}
         onPress={() => {
           setActionSheetVisible(true);
         }}
         bottomDivider>
         <ListItem.Content>
-          <ListItem.Title>{task.name}</ListItem.Title>
+          <ListItem.Title>{title}</ListItem.Title>
         </ListItem.Content>
-        {task.status === Task.STATUS_COMPLETE ? (
-          <Text>&#10004; {/* checkmark */}</Text>
-        ) : task.status === Task.STATUS_IN_PROGRESS ? (
-          <Text>In Progress</Text>
-        ) : null}
       </ListItem>
     </>
   );

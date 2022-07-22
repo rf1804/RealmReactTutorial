@@ -51,6 +51,7 @@ export function TaskItem({task}) {
       <ListItem
         key={task.id}
         onPress={() => {
+          console.log('Task Object', task);
           setActionSheetVisible(true);
         }}
         bottomDivider>

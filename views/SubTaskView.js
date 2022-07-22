@@ -6,31 +6,35 @@ import styles from '../stylesheet';
 import {Overlay} from 'react-native-elements';
 
 import {useTasks} from '../providers/TasksProvider';
-import {TaskItem} from '../components/TaskItem';
+import {SubTaskItem} from '../components/SubTaskItem';
 
 export function SubTaskView(props) {
+  const subTaskVal = props.route.params.taskObj.subTask;
   //   const {name} = route.params;
 
   //   const [overlayVisible, setOverlayVisible] = useState(false);
 
   //   const {tasks, createTask} = useTasks();
   useEffect(() => {
-    // navigation.setOptions({
-    //   //   headerRight: function Header() {
-    //   //     // return <AddTask createTask={createTask} />;
-    //   //   },
-    //   title: 'SubTasks',
-    // });
+    props.navigation.setOptions({
+      //   headerRight: function Header() {
+      //     // return <AddTask createTask={createTask} />;
+      //   },
+      title: 'SubTasks',
+    });
   }, []);
 
   return (
     <View>
       {console.log('taskObj in subTaskView', props.route)}
-      {props.route.params.taskObj.subTask.map((subTask, index) =>
-        task ? (
-          <SubTaskItem taskObj={task} key={index} title={subTask} />
-        ) : null,
-      )}
+      {console.log('subTaskss', subTaskVal)}
+      {subTaskVal.map((subTask, index) => (
+        <SubTaskItem
+          key={index}
+          taskObj={props.route.params.taskObj}
+          title={subTask}
+        />
+      ))}
     </View>
   );
 }

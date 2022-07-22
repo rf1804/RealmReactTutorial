@@ -6,7 +6,7 @@ import {Task} from '../schemas';
 
 import styles from '../stylesheet';
 
-export function SubTaskItem({taskObj, key, title}) {
+export function SubTaskItem({taskObj, title}) {
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
 
   const {deleteTask, editTaskView, viewSubTask, setTaskStatus} = useTasks();
@@ -36,7 +36,7 @@ export function SubTaskItem({taskObj, key, title}) {
   // avoid repetition, we split each status to separate each case in the code
   // below for demonstration purposes.
   // TODO
-
+  console.log('title', title);
   return (
     <>
       <ActionSheet
@@ -48,8 +48,9 @@ export function SubTaskItem({taskObj, key, title}) {
         }}
         actions={actions}
       />
+
       <ListItem
-        key={key}
+        key={taskObj.id}
         onPress={() => {
           setActionSheetVisible(true);
         }}

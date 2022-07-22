@@ -54,8 +54,8 @@ const App = () => {
 
           <Stack.Screen name="SubTask List">
             {props => {
-              const {navigation, route, projectPartition} = props;
-              const {user} = route.params;
+              const {navigation, route} = props;
+              const {user, projectPartition} = route.params;
               return (
                 <TasksProvider
                   navigation={navigation}

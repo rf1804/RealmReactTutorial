@@ -13,7 +13,6 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
   const [tasks, setTasks] = useState([]);
   const [updatedTask, setUpdatedTask] = useState();
   const [overlayVisible, setOverlayVisible] = useState(false);
-  const [isOpenSubTask, setIsOpenSubTask] = useState(false);
   const {user} = useAuth();
 
   // Use a Ref to store the realm rather than the state because it is not
@@ -156,8 +155,8 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
 
   const viewSubTask = task => {
     navigation.navigate('SubTask List', {
-      taskObj: task,
-      partition: projectPartition,
+      taskObj: JSON.parse(JSON.stringify(task)),
+      projectPartition: projectPartition,
     });
 
     // const projectRealm = realmRef.current;

@@ -1,4 +1,5 @@
 import React, {useContext, useState, useEffect, useRef} from 'react';
+import 'react-native-get-random-values';
 import Realm from 'realm';
 import {Task} from '../schemas';
 import {useAuth} from './AuthProvider';
@@ -38,6 +39,7 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
       schema: [Task.schema],
       sync: {
         user: user,
+        schemaVersion: 2,
         partitionValue: projectPartition,
         newRealmFileBehavior: OpenRealmBehaviorConfiguration,
         existingRealmFileBehavior: OpenRealmBehaviorConfiguration,
@@ -48,18 +50,18 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
     Realm.open(config).then(projectRealm => {
       realmRef.current = projectRealm;
       const syncTasks = projectRealm.objects('Task');
-      // let sortedTasks = syncTasks.sorted('name');
-      setTasks([...syncTasks]);
-      syncTasks.forEach(task => {
+      let sortedTasks = syncTasks.sorted('name');
+      setTasks([...sortedTasks]);
+      sortedTasks.forEach(task => {
         console.log('id : ', task._id);
         console.log('name :', task.name);
         console.log('status :', task.status);
-        // console.log('title :', task.title);
+        console.log('subtasks :', task.subTask);
         console.log('*****************');
       });
 
-      syncTasks.addListener(() => {
-        setTasks([...syncTasks]);
+      sortedTasks.addListener(() => {
+        setTasks([...sortedTasks]);
       });
 
       // sortedTasks.addListener((tasks, changes) => {

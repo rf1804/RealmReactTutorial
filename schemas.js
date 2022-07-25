@@ -1,3 +1,4 @@
+import 'react-native-get-random-values';
 import {ObjectId} from 'bson';
 
 class Task {
@@ -24,16 +25,6 @@ class Task {
   static STATUS_OPEN = 'Open';
   static STATUS_IN_PROGRESS = 'InProgress';
   static STATUS_COMPLETE = 'Complete';
-
-  // // TODO: implement schema
-  // static schema2 = {
-  //   name: 'SubTask',
-  //   embedded: true, // default: false
-  //   properties: {
-  //     name: 'string',
-  //     status: 'string',
-  //   },
-  // };
 
   static schema = {
     name: 'Task',

@@ -36,7 +36,7 @@ class Task {
   // };
 
   static schema = {
-    name: 'Task1',
+    name: 'Task',
     properties: {
       _id: 'objectId',
       name: 'string',

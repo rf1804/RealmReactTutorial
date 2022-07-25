@@ -47,10 +47,10 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
     // open a realm for this particular project
     Realm.open(config).then(projectRealm => {
       realmRef.current = projectRealm;
-      const syncTasks = projectRealm.objects('Task1');
+      const syncTasks = projectRealm.objects('Task');
       // let sortedTasks = syncTasks.sorted('name');
       setTasks([...syncTasks]);
-      sortedTasks.forEach(task => {
+      syncTasks.forEach(task => {
         console.log('id : ', task._id);
         console.log('name :', task.name);
         console.log('status :', task.status);
@@ -98,7 +98,7 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
     projectRealm.write(() => {
       // Create a new task in the same partition -- that is, in the same project.
       projectRealm.create(
-        'Task1',
+        'Task',
         new Task({
           name: newTaskName || 'New Task',
           partition: projectPartition,
@@ -144,7 +144,7 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
     const projectRealm = realmRef.current;
     projectRealm.write(() => {
       projectRealm.delete(task);
-      setTasks([...projectRealm.objects('Task1').sorted('name')]);
+      setTasks([...projectRealm.objects('Task').sorted('name')]);
     });
     // TODO: In a write block, delete the Task.
   };

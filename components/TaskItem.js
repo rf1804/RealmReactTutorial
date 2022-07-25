@@ -8,25 +8,16 @@ import styles from '../stylesheet';
 
 export function TaskItem({task}) {
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
-  // const [actionSheetSubTaskVisible, setActionSheetSubTaskVisible] =
-  // useState(false);
   const [showSubTask, setShowSubTask] = useState(true);
   const subTaskVal = task.subTask;
-  const {
-    deleteTask,
-    editTaskView,
-    viewSubTask,
-    setTaskStatus,
-    editSubTaskView,
-  } = useTasks();
+  const {deleteTask, editTaskView, editSubTaskView} = useTasks();
   const actions = [
-    {
-      title: 'View Subtask',
-      action: () => {
-        setShowSubTask(true);
-        // viewSubTask(task);
-      },
-    },
+    // {
+    //   title: 'View Subtask',
+    //   action: () => {
+    //     setShowSubTask(true);
+    //  },
+    // },
     {
       title: 'Edit Title',
       action: () => {
@@ -41,27 +32,13 @@ export function TaskItem({task}) {
     },
   ];
 
-  // const subTaskActions = [
-  //   {
-  //     title: 'Edit Subtask',
-  //     action: () => {
-  //       // setShowSubTask(true);
-  //       // viewSubTask(task);
-  //     },
-  //   },
-  // ];
-
   // For each possible status other than the current status, make an action to
   // move the task into that status. Rather than creating a generic method to
   // avoid repetition, we split each status to separate each case in the code
   // below for demonstration purposes.
   // TODO
   console.log('SubTaskVal demonstration', subTaskVal);
-  // task.subTask.forEach((subTask, index) => {
-  //   console.log('Each object value', subTask);
-  //   console.log(typeof subTask);
-  // });
-  // console.log(typeof task.subTask);
+
   return (
     <>
       <ActionSheet
@@ -73,13 +50,6 @@ export function TaskItem({task}) {
         }}
         actions={actions}
       />
-      {/* <ActionSheet
-        visible={actionSheetSubTaskVisible}
-        closeOverlay={() => {
-            setActionSheetSubTaskVisible(false);
-        }}
-        actions={subTaskActions}
-      /> */}
       <ListItem
         key={task.id}
         onPress={() => {
@@ -113,12 +83,3 @@ export function TaskItem({task}) {
     </>
   );
 }
-// {
-//   subTaskVal.map((subTask, index) => (
-//     <SubTaskItem
-//       key={index}
-//       taskObj={props.route.params.taskObj}
-//       title={subTask}
-//     />
-//   ));
-// }

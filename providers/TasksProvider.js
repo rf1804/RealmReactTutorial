@@ -54,7 +54,7 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
         console.log('id : ', task._id);
         console.log('name :', task.name);
         console.log('status :', task.status);
-        console.log('title :', task.title);
+        // console.log('title :', task.title);
         console.log('*****************');
       });
 

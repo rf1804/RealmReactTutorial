@@ -37,7 +37,7 @@ export function TaskItem({task}) {
   // avoid repetition, we split each status to separate each case in the code
   // below for demonstration purposes.
   // TODO
-  console.log('SubTaskVal demonstration', subTaskVal);
+  // console.log('SubTaskVal demonstration', subTaskVal);
 
   return (
     <>

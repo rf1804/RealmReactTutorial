@@ -1,6 +1,6 @@
 import React, {useContext, useState, useEffect, useRef} from 'react';
 import 'react-native-get-random-values';
-import Realm from 'realm';
+import Realm, {schemaVersion} from 'realm';
 import {Task} from '../schemas';
 import {useAuth} from './AuthProvider';
 import {ObjectId} from 'bson';
@@ -34,12 +34,11 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
     const OpenRealmBehaviorConfiguration = {
       type: 'openImmediately',
     };
-
     const config = {
       schema: [Task.schema],
+      schemaVersion: 3,
       sync: {
         user: user,
-        schemaVersion: 2,
         partitionValue: projectPartition,
         newRealmFileBehavior: OpenRealmBehaviorConfiguration,
         existingRealmFileBehavior: OpenRealmBehaviorConfiguration,
@@ -59,6 +58,8 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
         console.log('subtasks :', task.subTask);
         console.log('*****************');
       });
+
+      //  Realm.App.Sync.setLogLevel(user, 'debug');
 
       sortedTasks.addListener(() => {
         setTasks([...sortedTasks]);
@@ -104,20 +105,8 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
         new Task({
           name: newTaskName || 'New Task',
           partition: projectPartition,
-          subTask: ['A', 'B'],
-          // subTask: [`   ${newTaskName} subTask1`, `   ${newTaskName} subTask2`],
-          // subTask: [
-          //   {
-          //     // _id: new ObjectId(),
-          //     name: 'subTask1',
-          //     status: Task.STATUS_OPEN,
-          //   },
-          //   {
-          //     // _id: new ObjectId(),
-          //     name: 'subTask2',
-          //     status: Task.STATUS_OPEN,
-          //   },
-          // ],
+          subTask: [`   ${newTaskName} subTask1`, `   ${newTaskName} subTask2`],
+          counter: 1,
         }),
       );
     });
@@ -176,12 +165,6 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
       taskObj: task,
       projectPartition: projectPartition,
     });
-
-    // const projectRealm = realmRef.current;
-    // // projectRealm.write(() => {
-    // //   task.name = updatedName;
-    // // });
-    // // setOverlayVisible(false);
   };
 
   const editTaskView = task => {

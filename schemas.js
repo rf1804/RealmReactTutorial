@@ -14,12 +14,14 @@ class Task {
     status = Task.STATUS_OPEN,
     id = new ObjectId(),
     subTask,
+    counter,
   }) {
     this._partition = partition;
     this._id = id;
     this.name = name;
     this.status = status;
     this.subTask = subTask;
+    this.counter = counter;
   }
 
   static STATUS_OPEN = 'Open';
@@ -33,6 +35,7 @@ class Task {
       name: 'string',
       status: 'string',
       subTask: 'string[]',
+      counter: 'int',
     },
     primaryKey: '_id',
   };

@@ -8,12 +8,14 @@ import {useTasks} from '../providers/TasksProvider';
 export function EditSubTask(props) {
   const {user} = useAuth();
   const [newName, setNewName] = useState('');
-  const {editSubTask} = useTasks();
+  const {editSubTask, addSubTask} = useTasks();
   //   Edit Task once user press on submit btn
   const updatedTaskName = async () => {
     console.log('newName', newName);
     if (newName) {
-      editSubTask(props.taskObj, props.index, newName);
+      props.subTaskVal
+        ? editSubTask(props.taskObj, props.index, newName)
+        : addSubTask(props.taskObj, newName);
     } else {
       Alert.alert('Please enter subTask', null);
     }
@@ -28,7 +30,7 @@ export function EditSubTask(props) {
     <View style={styles.manageTeamWrapper}>
       {console.log('props inside edit task', props)}
       {console.log('props inside name', props?.taskObj.name)}
-      <Text h4> Edit Sub Task</Text>
+      <Text h4> {props.subTaskVal ? 'Edit Sub Task' : 'Add Sub Task'}</Text>
       <View style={styles.inputContainer}>
         <TextInput
           onChangeText={text => setNewName(text)}

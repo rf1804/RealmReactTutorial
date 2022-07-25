@@ -105,7 +105,7 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
         new Task({
           name: newTaskName || 'New Task',
           partition: projectPartition,
-          subTask: [`   ${newTaskName} subTask1`, `   ${newTaskName} subTask2`],
+          // subTask: [`   ${newTaskName} subTask1`, `   ${newTaskName} subTask2`],
           counter: 1,
         }),
       );
@@ -179,6 +179,32 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
     setOverlayVisibleForSubTask(true);
   };
 
+  const deleteSubTaskView = (task, index) => {
+    const projectRealm = realmRef.current;
+    projectRealm.write(() => {
+      //Option 1
+      task.subTask = [
+        ...task.subTask.slice(0, index),
+        ...task.subTask.slice(index + 1),
+      ];
+    });
+  };
+
+  const addSubTaskView = task => {
+    setUpdatedTask(task);
+    setsubTaskInitalVal('');
+    setOverlayVisibleForSubTask(true);
+  };
+
+  const addSubTask = (task, newSubTaskVal) => {
+    console.log('add SUbtask called');
+    const projectRealm = realmRef.current;
+    projectRealm.write(() => {
+      task.subTask.push(newSubTaskVal);
+    });
+    setOverlayVisibleForSubTask(false);
+  };
+
   // Render the children within the TaskContext's provider. The value contains
   // everything that should be made available to descendants that use the
   // useTasks hook.
@@ -193,7 +219,10 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
           editTask,
           viewSubTask,
           editSubTaskView,
+          deleteSubTaskView,
           editSubTask,
+          addSubTaskView,
+          addSubTask,
           tasks,
         }}>
         {children}

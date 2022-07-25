@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {ListItem, Text} from 'react-native-elements';
+import {ListItem, Text, Button} from 'react-native-elements';
 import {useTasks} from '../providers/TasksProvider';
 import {ActionSheet} from './ActionSheet';
 import {Task} from '../schemas';
@@ -8,16 +8,30 @@ import styles from '../stylesheet';
 
 export function TaskItem({task}) {
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
+  const [actionSheetVisibleForSubTask, setActionSheetVisibleForSubTask] =
+    useState(false);
   const [showSubTask, setShowSubTask] = useState(true);
+
   const subTaskVal = task.subTask;
-  const {deleteTask, editTaskView, editSubTaskView} = useTasks();
+  const {
+    deleteTask,
+    editTaskView,
+    editSubTaskView,
+    deleteSubTaskView,
+    addSubTaskView,
+  } = useTasks();
+
+  //State for edit/delete subtask operations
+  const [subTaskIndex, setSubTaskIndex] = useState();
+  const [subTaskValue, setSubTaskValue] = useState('');
+
   const actions = [
-    // {
-    //   title: 'View Subtask',
-    //   action: () => {
-    //     setShowSubTask(true);
-    //  },
-    // },
+    {
+      title: 'View Subtask',
+      action: () => {
+        setShowSubTask(true);
+      },
+    },
     {
       title: 'Edit Title',
       action: () => {
@@ -28,6 +42,21 @@ export function TaskItem({task}) {
       title: 'Delete',
       action: () => {
         deleteTask(task);
+      },
+    },
+  ];
+
+  const subTaskActions = [
+    {
+      title: 'Edit',
+      action: () => {
+        editSubTaskView(task, subTaskIndex, subTaskValue);
+      },
+    },
+    {
+      title: 'Delete',
+      action: () => {
+        deleteSubTaskView(task, subTaskIndex);
       },
     },
   ];
@@ -50,6 +79,17 @@ export function TaskItem({task}) {
         }}
         actions={actions}
       />
+
+      <ActionSheet
+        visible={actionSheetVisibleForSubTask}
+        closeOverlay={() => {
+          if (task.status) {
+            setActionSheetVisibleForSubTask(false);
+          }
+        }}
+        actions={subTaskActions}
+      />
+
       <ListItem
         key={task.id}
         onPress={() => {
@@ -57,8 +97,21 @@ export function TaskItem({task}) {
           setActionSheetVisible(true);
         }}
         bottomDivider>
-        <ListItem.Content>
+        <ListItem.Content
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
           <ListItem.Title style={{color: 'red'}}>{task.name}</ListItem.Title>
+          <Button
+            type="clear"
+            titleStyle={styles.plusButton}
+            title="&#x2b;"
+            onPress={() => {
+              addSubTaskView(task);
+            }}
+          />
         </ListItem.Content>
       </ListItem>
       {showSubTask
@@ -70,7 +123,13 @@ export function TaskItem({task}) {
                 key={index}
                 onPress={() => {
                   console.log('SubTask pressed');
-                  editSubTaskView(task, index, subTask);
+                  setSubTaskIndex(index);
+                  setSubTaskValue(subTask);
+                  setActionSheetVisibleForSubTask(true);
+
+                  // openSubTaskActionSheet(task, index, subTask);
+
+                  // editSubTaskView(task, index, subTask);
                 }}
                 bottomDivider>
                 <ListItem.Content>

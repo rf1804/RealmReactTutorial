@@ -190,6 +190,23 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
     });
   };
 
+  const increaseCounter = task => {
+    const projectRealm = realmRef.current;
+    projectRealm.write(() => {
+      task.counter = task.counter + 1;
+    });
+  };
+
+  const decreaseCounter = task => {
+    const projectRealm = realmRef.current;
+    projectRealm.write(() => {
+      task.counter = task.counter - 1;
+      if (task.counter < 0) {
+        task.counter = 0;
+      }
+    });
+  };
+
   const addSubTaskView = task => {
     setUpdatedTask(task);
     setsubTaskInitalVal('');
@@ -223,6 +240,8 @@ const TasksProvider = ({navigation, route, children, projectPartition}) => {
           editSubTask,
           addSubTaskView,
           addSubTask,
+          increaseCounter,
+          decreaseCounter,
           tasks,
         }}>
         {children}

@@ -19,6 +19,8 @@ export function TaskItem({task}) {
     editSubTaskView,
     deleteSubTaskView,
     addSubTaskView,
+    increaseCounter,
+    decreaseCounter,
   } = useTasks();
 
   //State for edit/delete subtask operations
@@ -27,11 +29,25 @@ export function TaskItem({task}) {
 
   const actions = [
     {
-      title: 'View Subtask',
+      title: 'Increase Counter By 1',
       action: () => {
-        setShowSubTask(true);
+        increaseCounter(task);
       },
     },
+
+    {
+      title: 'Decrease Counter By 1',
+      action: () => {
+        decreaseCounter(task);
+      },
+    },
+
+    // {
+    //   title: 'View Subtask',
+    //   action: () => {
+    //     setShowSubTask(true);
+    //   },
+    // },
     {
       title: 'Edit Title',
       action: () => {
@@ -103,7 +119,9 @@ export function TaskItem({task}) {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <ListItem.Title style={{color: 'red'}}>{task.name}</ListItem.Title>
+          <ListItem.Title style={{color: 'red'}}>
+            {task.name} (Counter : {task.counter})
+          </ListItem.Title>
           <Button
             type="clear"
             titleStyle={styles.plusButton}
